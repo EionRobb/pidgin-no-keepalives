@@ -80,6 +80,7 @@ plugin_unload(PurplePlugin *plugin)
 	PurplePluginProtocolInfo *prpl_info;
 	PurpleAccountOption *option;
 	PurplePlugin *proto;
+	const gchar *setting;
 	
 	proto_list = purple_plugins_get_protocols();
 	for(; proto_list; proto_list = proto_list->next)
@@ -98,7 +99,8 @@ plugin_unload(PurplePlugin *plugin)
 		while(list != NULL)
 		{
 			option = (PurpleAccountOption *) list->data;
-			if (g_str_equal(purple_account_option_get_setting(option), NO_KEEPALIVES_ID))
+			setting = purple_account_option_get_setting(option);
+			if (setting && g_str_equal(setting, NO_KEEPALIVES_ID))
 			{
 				llist = list;
 				if (llist->prev)
