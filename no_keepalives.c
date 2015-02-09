@@ -5,6 +5,7 @@
 #include <debug.h>
 #include <account.h>
 #include <accountopt.h>
+#include <core.h>
 
 #ifndef _
 #	define _(a) a
@@ -123,9 +124,20 @@ plugin_unload(PurplePlugin *plugin)
 	return TRUE;
 }
 
+static PurplePlugin *this_plugin = NULL;
+
+static void
+plugin_quitting()
+{
+	plugin_unload(this_plugin);
+	this_plugin->info->unload = NULL;
+}
+
 static void
 plugin_init(PurplePlugin *plugin)
 {
+	this_plugin = plugin;
+	purple_signal_connect(purple_get_core(), "quitting", plugin, PURPLE_CALLBACK(plugin_quitting), NULL);
 }
 
 static PurplePluginInfo info = 
